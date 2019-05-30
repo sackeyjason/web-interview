@@ -17,11 +17,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    document
-      .querySelectorAll('button')
-      .querySelectorAll('[id=GP-button]')
-      .attachEventHandler('click', this.onClick)
-
     fetch(`${API_ENDPOINT}/availableSlots`)
       .then(res => res.json())
       .then(json => {
@@ -61,7 +56,12 @@ class App extends Component {
           <img src={logo} className="app-logo" alt="Babylon Health" />
         </div>
         <div style={{ maxWidth: 600, margin: '24px auto' }}>
-          <div className="button" id="GP-button">
+          <div
+            className="button"
+            onClick={e => {
+              this.setState({ selectedAppointmentType: 'gp' })
+            }}
+          >
             GP
           </div>
           <div
@@ -90,8 +90,9 @@ class App extends Component {
           </div>
           <div>
             <strong>Appointments</strong>
-            {slots.map(slot => (
+            {slots.map((slot, i) => (
               <li
+                key={i}
                 className="appointment-button"
                 onClick={() => {
                   this.setState({ selectedAppointment: slot })

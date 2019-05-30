@@ -4,13 +4,15 @@ import PropTypes from 'prop-types'
 function SelectorButtons(props) {
   return (
     <div>
-      {Object.keys(props.options).map(key => (
+      {props.options.map(option => (
         <button
-          className={'button ' + (props.selected === key ? 'active' : '')}
-          onClick={() => props.clickHandler(key)}
-          key={key}
+          className={
+            'button ' + (props.selected === option.value ? 'active' : '')
+          }
+          onClick={() => props.clickHandler(option.value)}
+          key={option.value}
         >
-          {props.options[key]}
+          {option.label}
         </button>
       ))}
     </div>
@@ -21,6 +23,6 @@ export default SelectorButtons
 
 SelectorButtons.propTypes = {
   selected: PropTypes.string.isRequired,
-  options: PropTypes.object.isRequired,
+  options: PropTypes.array.isRequired,
   clickHandler: PropTypes.func.isRequired,
 }

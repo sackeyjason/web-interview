@@ -44,12 +44,12 @@ class App extends Component {
         <div style={{ maxWidth: 600, margin: '24px auto' }}>
           <SelectorButtons
             selected={this.state.selectedAppointmentType}
-            options={{
-              gp: 'GP',
-              therapist: 'Therapist',
-              physio: 'Physio',
-              specialist: 'Specialist',
-            }}
+            options={[
+              { value: 'gp', label: 'GP' },
+              { value: 'therapist', label: 'Therapist' },
+              { value: 'physio', label: 'Physio' },
+              { value: 'specialist', label: 'Specialist' },
+            ]}
             clickHandler={value =>
               this.setState({
                 selectedAppointmentType: value,
@@ -58,17 +58,19 @@ class App extends Component {
           />
           <div>
             <strong>Appointments</strong>
-            {slots.map((slot, i) => (
-              <li
-                key={i}
-                className="appointment-button"
-                onClick={() => {
-                  this.setState({ selectedAppointment: slot })
-                }}
-              >
-                {slot.time}
-              </li>
-            ))}
+            <SelectorButtons
+              selected={
+                this.state.selectedAppointment
+                  ? this.state.selectedAppointment.id
+                  : ''
+              }
+              options={slots.map(slot => {
+                return { value: slot, label: slot.time }
+              })}
+              clickHandler={value => {
+                this.setState({ selectedAppointment: value })
+              }}
+            />
           </div>
           <div>
             <strong>Notes</strong>

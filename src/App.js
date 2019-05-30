@@ -65,7 +65,11 @@ class App extends Component {
                   : ''
               }
               options={slots.map(slot => {
-                return { value: slot, label: slot.time }
+                return {
+                  value: slot,
+                  label: slot.time,
+                  id: slot.id,
+                }
               })}
               clickHandler={value => {
                 this.setState({ selectedAppointment: value })

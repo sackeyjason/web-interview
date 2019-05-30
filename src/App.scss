@@ -13,13 +13,20 @@
 .button {
   box-sizing: border-box;
   padding: 12px;
-  background-color: $primary-dark;
-  color: $secondary-light;
+  background-color: white;
+  color: $label-color;
   width: calc(25% - 12px);
   height: 42px;
   margin-right: 12px;
   display: inline-block;
   text-align: center;
+  border: solid 1px;
+
+  &.active {
+    background-color: $aqua;
+    color: white;
+    border-color: $aqua;
+  }
 }
 
 h2 {

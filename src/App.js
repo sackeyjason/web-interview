@@ -4,6 +4,7 @@ import logo from './logo.png'
 import { API_ENDPOINT } from './config'
 
 import './App.scss'
+import SelectorButtons from './components/SelectorButtons'
 
 class App extends Component {
   constructor(props) {
@@ -27,27 +28,12 @@ class App extends Component {
       })
   }
 
-  onClick() {
-    this.setState({ selectedAppointmentType: 'gp' })
-  }
-
   render() {
     // calculate matching slots
-    let slots = []
-    for (let i = 0; i < this.state.availableSlots.length; i++) {
-      for (
-        let j = 0;
-        j < this.state.availableSlots[i]['consultantType'].length;
-        j++
-      ) {
-        if (
-          this.state.availableSlots[j]['consultantType'][i] ===
-          this.state.selectedAppointmentType
-        ) {
-          slots.push(this.state.availableSlots[j])
-        }
-      }
-    }
+    let slots = this.state.availableSlots.filter(
+      slot =>
+        slot.consultantType.indexOf(this.state.selectedAppointmentType) >= 0
+    )
 
     return (
       <div className="app">
@@ -56,38 +42,20 @@ class App extends Component {
           <img src={logo} className="app-logo" alt="Babylon Health" />
         </div>
         <div style={{ maxWidth: 600, margin: '24px auto' }}>
-          <div
-            className="button"
-            onClick={e => {
-              this.setState({ selectedAppointmentType: 'gp' })
+          <SelectorButtons
+            selected={this.state.selectedAppointmentType}
+            options={{
+              gp: 'GP',
+              therapist: 'Therapist',
+              physio: 'Physio',
+              specialist: 'Specialist',
             }}
-          >
-            GP
-          </div>
-          <div
-            className="button"
-            onClick={e => {
-              this.setState({ selectedAppointmentType: 'Therapist' })
-            }}
-          >
-            Therapist
-          </div>
-          <div
-            className="button"
-            onClick={e => {
-              this.setState({ selectedAppointmentType: 'Physio' })
-            }}
-          >
-            Physio
-          </div>
-          <div
-            className="button"
-            onClick={e => {
-              this.setState({ selectedAppointmentType: 'specialist' })
-            }}
-          >
-            Specialist
-          </div>
+            clickHandler={value =>
+              this.setState({
+                selectedAppointmentType: value,
+              })
+            }
+          />
           <div>
             <strong>Appointments</strong>
             {slots.map((slot, i) => (

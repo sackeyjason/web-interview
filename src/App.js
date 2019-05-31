@@ -4,7 +4,6 @@ import logo from './logo.png'
 import { API_ENDPOINT } from './config'
 
 import './App.scss'
-import SelectorButtons from './components/SelectorButtons'
 
 class App extends Component {
   constructor(props) {
@@ -14,6 +13,7 @@ class App extends Component {
       userId: 1,
       selectedAppointmentType: 'gp',
       availableSlots: [],
+      selectedAppointment: {},
     }
   }
 
@@ -42,39 +42,45 @@ class App extends Component {
           <img src={logo} className="app-logo" alt="Babylon Health" />
         </div>
         <div style={{ maxWidth: 600, margin: '24px auto' }}>
-          <SelectorButtons
-            selected={this.state.selectedAppointmentType}
-            options={[
-              { value: 'gp', label: 'GP' },
-              { value: 'therapist', label: 'Therapist' },
-              { value: 'physio', label: 'Physio' },
-              { value: 'specialist', label: 'Specialist' },
-            ]}
-            clickHandler={value =>
-              this.setState({
-                selectedAppointmentType: value,
-              })
-            }
-          />
+          {[
+            { value: 'gp', label: 'GP' },
+            { value: 'therapist', label: 'Therapist' },
+            { value: 'physio', label: 'Physio' },
+            { value: 'specialist', label: 'Specialist' },
+          ].map(appointmentType => (
+            <button
+              key={appointmentType.value}
+              className={
+                'button ' +
+                (appointmentType.value === this.state.selectedAppointmentType
+                  ? 'active'
+                  : '')
+              }
+              onClick={() => {
+                this.setState({
+                  selectedAppointmentType: appointmentType.value,
+                })
+              }}
+            >
+              {appointmentType.label}
+            </button>
+          ))}
           <div>
             <strong>Appointments</strong>
-            <SelectorButtons
-              selected={
-                this.state.selectedAppointment
-                  ? this.state.selectedAppointment.id
-                  : ''
-              }
-              options={slots.map(slot => {
-                return {
-                  value: slot,
-                  label: slot.time,
-                  id: slot.id,
+            {slots.map(slot => (
+              <button
+                key={slot.id}
+                onClick={() => {
+                  this.setState({ selectedAppointment: slot })
+                }}
+                className={
+                  'button ' +
+                  (slot.id === this.state.selectedAppointment.id && 'active')
                 }
-              })}
-              clickHandler={value => {
-                this.setState({ selectedAppointment: value })
-              }}
-            />
+              >
+                {new Date(slot.time).toLocaleString()}
+              </button>
+            ))}
           </div>
           <div>
             <strong>Notes</strong>

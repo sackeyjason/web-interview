@@ -4,6 +4,7 @@ import logo from './logo.png'
 import { API_ENDPOINT } from './config'
 
 import './App.scss'
+import SelectorButton from './components/SelectorButton'
 
 class App extends Component {
   constructor(props) {
@@ -11,7 +12,8 @@ class App extends Component {
 
     this.state = {
       userId: 1,
-      selectedAppointmentType: 'gp',
+      selectedConsultantType: 'gp',
+      selectedAppointmentType: 'video',
       availableSlots: [],
       selectedAppointment: {},
     }
@@ -32,8 +34,12 @@ class App extends Component {
     // calculate matching slots
     let slots = this.state.availableSlots.filter(
       slot =>
-        slot.consultantType.indexOf(this.state.selectedAppointmentType) >= 0
+        slot.consultantType.indexOf(this.state.selectedConsultantType) >= 0
     )
+    let types = []
+    if (this.state.selectedAppointment.appointmentType) {
+      types = this.state.selectedAppointment.appointmentType
+    }
 
     return (
       <div className="app">
@@ -47,54 +53,77 @@ class App extends Component {
             { value: 'therapist', label: 'Therapist' },
             { value: 'physio', label: 'Physio' },
             { value: 'specialist', label: 'Specialist' },
-          ].map(appointmentType => (
-            <button
-              key={appointmentType.value}
-              className={
-                'button ' +
-                (appointmentType.value === this.state.selectedAppointmentType
-                  ? 'active'
-                  : '')
-              }
-              onClick={() => {
+          ].map(consultant => (
+            <SelectorButton
+              key={consultant.value}
+              value={consultant.value}
+              active={consultant.value === this.state.selectedConsultantType}
+              clickHandler={() => {
                 this.setState({
-                  selectedAppointmentType: appointmentType.value,
+                  selectedConsultantType: consultant.value,
                 })
               }}
             >
-              {appointmentType.label}
-            </button>
+              {consultant.label}
+            </SelectorButton>
           ))}
+
           <div>
             <strong>Appointments</strong>
-            {slots.map(slot => (
-              <button
-                key={slot.id}
-                onClick={() => {
-                  this.setState({ selectedAppointment: slot })
-                }}
-                className={
-                  'button ' +
-                  (slot.id === this.state.selectedAppointment.id && 'active')
-                }
-              >
-                {new Date(slot.time).toLocaleString()}
-              </button>
-            ))}
+            <div>
+              {slots.map(slot => (
+                <button
+                  key={slot.id}
+                  onClick={() => {
+                    this.setState({ selectedAppointment: slot })
+                  }}
+                  className={
+                    'button ' +
+                    (slot.id === this.state.selectedAppointment.id && 'active')
+                  }
+                >
+                  {new Date(slot.time).toLocaleString()}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <strong>Appointment type</strong>
+            <div>
+              {types
+                .sort()
+                .reverse()
+                .map(type => (
+                  <button
+                    key={type}
+                    style={{ textTransform: 'capitalize' }}
+                    className={
+                      'button ' +
+                      (type === this.state.selectedAppointmentType && 'active')
+                    }
+                    onClick={() => {
+                      this.setState({ selectedAppointmentType: type })
+                    }}
+                  >
+                    {type}
+                  </button>
+                ))}
+            </div>
           </div>
           <div>
             <strong>Notes</strong>
             <textarea />
           </div>
           <div>
-            <div
-              className="button"
+            <button
+              className="button button-block"
               onClick={() => {
                 /* TODO: submit the data */
               }}
             >
-              Book appointment
-            </div>
+              Book
+            </button>
           </div>
         </div>
       </div>

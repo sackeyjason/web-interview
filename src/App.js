@@ -43,11 +43,18 @@ class App extends Component {
 
     return (
       <div className="app">
-        <h2 className="h6">New appointment</h2>
+        <h1 className="h6">New appointment</h1>
         <div className="app-header">
           <img src={logo} className="app-logo" alt="Babylon Health" />
         </div>
-        <div style={{ maxWidth: 600, margin: '24px auto' }}>
+        <div
+          style={{
+            maxWidth: 600,
+            margin: '24px auto',
+            padding: '0 1rem',
+          }}
+        >
+          <h2>Consultant type</h2>
           {[
             { value: 'gp', label: 'GP' },
             { value: 'therapist', label: 'Therapist' },
@@ -56,12 +63,9 @@ class App extends Component {
           ].map(consultant => (
             <SelectorButton
               key={consultant.value}
-              value={consultant.value}
               active={consultant.value === this.state.selectedConsultantType}
               clickHandler={() => {
-                this.setState({
-                  selectedConsultantType: consultant.value,
-                })
+                this.setState({ selectedConsultantType: consultant.value })
               }}
             >
               {consultant.label}
@@ -69,53 +73,57 @@ class App extends Component {
           ))}
 
           <div>
-            <strong>Appointments</strong>
+            <h2>Date &amp; time</h2>
             <div>
               {slots.map(slot => (
-                <button
+                <SelectorButton
                   key={slot.id}
-                  onClick={() => {
+                  active={slot.id === this.state.selectedAppointment.id}
+                  clickHandler={() => {
                     this.setState({ selectedAppointment: slot })
                   }}
-                  className={
-                    'button ' +
-                    (slot.id === this.state.selectedAppointment.id && 'active')
-                  }
                 >
                   {new Date(slot.time).toLocaleString()}
-                </button>
+                </SelectorButton>
               ))}
             </div>
           </div>
 
           <div>
-            <strong>Appointment type</strong>
+            <h2>Appointment type</h2>
             <div>
               {types
                 .sort()
                 .reverse()
                 .map(type => (
-                  <button
+                  <SelectorButton
                     key={type}
-                    style={{ textTransform: 'capitalize' }}
-                    className={
-                      'button ' +
-                      (type === this.state.selectedAppointmentType && 'active')
-                    }
-                    onClick={() => {
+                    active={type === this.state.selectedAppointmentType}
+                    clickHandler={() => {
                       this.setState({ selectedAppointmentType: type })
                     }}
                   >
-                    {type}
-                  </button>
+                    <span style={{ textTransform: 'capitalize' }}>{type}</span>
+                  </SelectorButton>
                 ))}
             </div>
           </div>
           <div>
-            <strong>Notes</strong>
-            <textarea />
+            <h2>Notes</h2>
+            <textarea
+              style={{
+                width: '100%',
+                resize: 'none',
+              }}
+            />
           </div>
-          <div>
+          <div
+            style={{
+              marginTop: 16,
+              paddingTop: 16,
+              borderTop: 'solid 1px silver',
+            }}
+          >
             <button
               className="button button-block"
               onClick={() => {

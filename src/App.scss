@@ -1,7 +1,12 @@
 @import './constants.scss';
 
+* {
+  box-sizing: border-box;
+}
+
 html {
   font-family: sans-serif;
+  overflow-y: scroll;
 }
 
 .app-header {

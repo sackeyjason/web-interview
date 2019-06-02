@@ -28,6 +28,36 @@ class App extends Component {
       .catch(() => {
         // TODO: Handle error here
       })
+
+    fetch(`${API_ENDPOINT}/users/${this.state.userId}`)
+      .then(res => res.json())
+      .then(json => {
+        this.setState({ userData: json })
+      })
+      .catch(() => {
+        // TODO: Handle error here
+      })
+  }
+
+  bookAppointment() {
+    let info = {
+      notes: this.state.noteText,
+      userId: this.state.userId,
+      dateTime: this.state.selectedAppointment.time,
+      type: this.state.selectedConsultantType,
+    }
+
+    let data = new FormData()
+    data.append('json', JSON.stringify(info))
+
+    fetch(`${API_ENDPOINT}/appointments`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(info),
+    })
   }
 
   render() {
@@ -38,12 +68,11 @@ class App extends Component {
     )
     let types = []
     if (this.state.selectedAppointment.appointmentType) {
-      types = this.state.selectedAppointment.appointmentType
+      types = this.state.selectedAppointment.appointmentType.sort().reverse()
     }
 
     return (
       <div className="app">
-        <h1 className="h6">New appointment</h1>
         <div className="app-header">
           <img src={logo} className="app-logo" alt="Babylon Health" />
         </div>
@@ -54,6 +83,7 @@ class App extends Component {
             padding: '0 1rem',
           }}
         >
+          <h1 className="h6">New appointment</h1>
           <h2>Consultant type</h2>
           {[
             { value: 'gp', label: 'GP' },
@@ -92,20 +122,17 @@ class App extends Component {
           <div>
             <h2>Appointment type</h2>
             <div>
-              {types
-                .sort()
-                .reverse()
-                .map(type => (
-                  <SelectorButton
-                    key={type}
-                    active={type === this.state.selectedAppointmentType}
-                    clickHandler={() => {
-                      this.setState({ selectedAppointmentType: type })
-                    }}
-                  >
-                    <span style={{ textTransform: 'capitalize' }}>{type}</span>
-                  </SelectorButton>
-                ))}
+              {types.map(type => (
+                <SelectorButton
+                  key={type}
+                  active={type === this.state.selectedAppointmentType}
+                  clickHandler={() => {
+                    this.setState({ selectedAppointmentType: type })
+                  }}
+                >
+                  <span style={{ textTransform: 'capitalize' }}>{type}</span>
+                </SelectorButton>
+              ))}
             </div>
           </div>
           <div>
@@ -114,6 +141,9 @@ class App extends Component {
               style={{
                 width: '100%',
                 resize: 'none',
+              }}
+              onChange={e => {
+                this.setState({ noteText: e.target.value })
               }}
             />
           </div>
@@ -126,9 +156,7 @@ class App extends Component {
           >
             <button
               className="button button-block"
-              onClick={() => {
-                /* TODO: submit the data */
-              }}
+              onClick={this.bookAppointment.bind(this)}
             >
               Book
             </button>

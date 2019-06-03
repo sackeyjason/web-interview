@@ -5,6 +5,7 @@ import { API_ENDPOINT } from './config'
 
 import './App.scss'
 import SelectorButton from './components/SelectorButton'
+import FormError from './components/FormError'
 
 class App extends Component {
   constructor(props) {
@@ -44,7 +45,19 @@ class App extends Component {
       notes: this.state.noteText,
       userId: this.state.userId,
       dateTime: this.state.selectedAppointment.time,
-      type: this.state.selectedConsultantType,
+      type: {
+        gp: 'GP appointment',
+        specialist: 'Specialist appointment',
+        physio: 'Physio appointment',
+        therapist: 'Therapist appointment',
+      }[this.state.selectedConsultantType],
+    }
+    this.setState({ error: '' })
+
+    // Validate appointment info
+    if (!info.dateTime) {
+      this.setState({ error: 'You must select an appointment time.' })
+      return
     }
 
     let data = new FormData()
@@ -96,6 +109,7 @@ class App extends Component {
               active={consultant.value === this.state.selectedConsultantType}
               clickHandler={() => {
                 this.setState({ selectedConsultantType: consultant.value })
+                this.setState({ selectedAppointment: {} })
               }}
             >
               {consultant.label}
@@ -154,6 +168,7 @@ class App extends Component {
               borderTop: 'solid 1px silver',
             }}
           >
+            <FormError message={this.state.error} />
             <button
               className="button button-block"
               onClick={this.bookAppointment.bind(this)}

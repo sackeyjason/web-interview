@@ -17,5 +17,5 @@ export default SelectorButton
 SelectorButton.propTypes = {
   clickHandler: PropTypes.func.isRequired,
   active: PropTypes.bool.isRequired,
-  children: PropTypes.element.isRequired,
+  children: PropTypes.any.isRequired,
 }

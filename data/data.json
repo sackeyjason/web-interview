@@ -102,10 +102,40 @@
       "dateTime": "2019-08-30T20:21:30.000Z"
     },
     {
-      "notes": "Writing",
+      "userId": 1,
+      "dateTime": "2019-11-16T16:18:30.000Z",
+      "type": "Therapist appointment",
+      "id": 2
+    },
+    {
+      "userId": 1,
+      "dateTime": "2019-11-16T16:18:30.000Z",
+      "type": "Therapist appointment",
+      "id": 3
+    },
+    {
+      "notes": "okay",
       "userId": 1,
       "dateTime": "2019-10-08T16:17:30.000Z",
-      "type": "gp",
+      "type": "GP appointment",
+      "id": 4
+    },
+    {
+      "userId": 1,
+      "dateTime": "2019-10-08T16:17:30.000Z",
+      "type": "GP appointment",
+      "id": 5
+    },
+    {
+      "userId": 1,
+      "dateTime": "2019-11-16T16:18:30.000Z",
+      "type": "Therapist appointment",
+      "id": 6
+    },
+    {
+      "userId": 1,
+      "dateTime": "2019-10-08T16:17:30.000Z",
+      "type": "GP appointment",
       "id": 7
     }
   ]

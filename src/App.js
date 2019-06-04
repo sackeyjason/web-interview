@@ -4,6 +4,7 @@ import logo from './logo.png'
 import { API_ENDPOINT } from './config'
 
 import './App.scss'
+import UserHeader from './components/UserHeader'
 import SelectorButton from './components/SelectorButton'
 import FormError from './components/FormError'
 
@@ -13,8 +14,8 @@ class App extends Component {
 
     this.state = {
       userId: 1,
-      selectedConsultantType: 'gp',
-      selectedAppointmentType: 'video',
+      selectedConsultantType: '',
+      selectedAppointmentType: '',
       availableSlots: [],
       selectedAppointment: {},
     }
@@ -26,18 +27,18 @@ class App extends Component {
       .then(json => {
         this.setState({ availableSlots: json })
       })
-      .catch(() => {
-        // TODO: Handle error here
-      })
+      .catch(this.handleError)
 
     fetch(`${API_ENDPOINT}/users/${this.state.userId}`)
       .then(res => res.json())
       .then(json => {
         this.setState({ userData: json })
       })
-      .catch(() => {
-        // TODO: Handle error here
-      })
+      .catch(this.handleError)
+  }
+
+  handleError(error) {
+    console.log(error)
   }
 
   bookAppointment() {
@@ -70,6 +71,13 @@ class App extends Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(info),
+    }).then(() => {
+      window.alert('Appointment booking successful.')
+      this.setState({
+        selectedAppointment: {},
+        selectedConsultantType: '',
+        selectedAppointmentType: '',
+      })
     })
   }
 
@@ -85,9 +93,41 @@ class App extends Component {
     }
 
     return (
-      <div className="app">
+      <div className="app" style={{ minWidth: 320 }}>
         <div className="app-header">
-          <img src={logo} className="app-logo" alt="Babylon Health" />
+          <div
+            style={{
+              maxWidth: 600,
+              margin: '0 auto',
+              padding: '0 1rem',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <span
+              style={{
+                transform: 'rotate(90deg)',
+              }}
+            >
+              |||
+            </span>
+            <img src={logo} className="app-logo" alt="Babylon Health" />
+            <span
+              style={{
+                color: 'white',
+                background: 'gray',
+                borderRadius: '50%',
+                width: 48,
+                height: 48,
+                display: 'block',
+                textAlign: 'center',
+                lineHeight: '48px',
+              }}
+            >
+              NU
+            </span>
+          </div>
         </div>
         <div
           style={{
@@ -97,6 +137,7 @@ class App extends Component {
           }}
         >
           <h1 className="h6">New appointment</h1>
+          <UserHeader user={this.state.userData} />
           <h2>Consultant type</h2>
           {[
             { value: 'gp', label: 'GP' },
